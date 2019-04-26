@@ -6,7 +6,7 @@ import time
 
 
 #splash image path
-splash_image = "/home/sv-v1/projects/picasso/images/Musical Picasso.png"
+splash_image = "/home/sv-v1/projects/picasso/images/Musical Picasso 1.png"
 #splash UI path
 splash_ui = "/home/sv-v1/projects/picasso/gui/splashscreen/splash.ui"
 #Image Folder Path
@@ -55,7 +55,6 @@ def wait_key(time_seconds):
 		#state True if Esc key is pressed
 		state = True
 	if k == enter:
-		controller.Welcome()
 		cv2.destroyWindow(window_name)
 		state = True
 	
@@ -118,7 +117,7 @@ Splash screen starts
 class ThreadProgress(QtCore.QThread):
     mysignal = QtCore.pyqtSignal(int)
     def __init__(self, parent=None):
-        QtCore.QThread.__init__(self, parent=None)
+        QtCore.QThread.__init__(self, parent)
     def run(self):
         i = 0
         while i<101:
@@ -126,67 +125,28 @@ class ThreadProgress(QtCore.QThread):
             self.mysignal.emit(i)
             i += 1
 
-class Ui_Splash(object):
-    switch_window = QtCore.pyqtSignal()
-    def setupUi(self, Splash):
-        Splash.setObjectName("Splash")
-        Splash.showFullScreen()
-        self.centralwidget = QtWidgets.QWidget(Splash)
-        self.centralwidget.setStyleSheet("background-color: rgb(49, 54, 59);")
-        self.centralwidget.setObjectName("centralwidget")
-        self.gridLayout = QtWidgets.QGridLayout(self.centralwidget)
-        self.gridLayout.setObjectName("gridLayout")
-        spacerItem = QtWidgets.QSpacerItem(587, 48, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
-        self.gridLayout.addItem(spacerItem, 0, 1, 1, 2)
-        spacerItem1 = QtWidgets.QSpacerItem(600, 448, QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Expanding)
-        self.gridLayout.addItem(spacerItem1, 1, 0, 3, 1)
-        self.label = QtWidgets.QLabel(self.centralwidget)
-        self.label.setText("")
-        self.label.setPixmap(QtGui.QPixmap(splash_image))
-        self.label.setScaledContents(True)
-        self.label.setAlignment(QtCore.Qt.AlignCenter)
-        self.label.setObjectName("label")
-        self.gridLayout.addWidget(self.label, 1, 1, 1, 2)
-        spacerItem2 = QtWidgets.QSpacerItem(600, 448, QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Expanding)
-        self.gridLayout.addItem(spacerItem2, 1, 3, 3, 1)
-        spacerItem3 = QtWidgets.QSpacerItem(587, 48, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
-        self.gridLayout.addItem(spacerItem3, 2, 1, 2, 2)
-        self.progressBar = QtWidgets.QProgressBar(self.centralwidget)
-        self.progressBar.setStyleSheet("background-color: rgb(210, 219, 230);")
-        self.progressBar.setProperty("value", 0)
-        self.progressBar.setObjectName("progressBar")
-        self.gridLayout.addWidget(self.progressBar, 3, 2, 1, 1)
-        spacerItem4 = QtWidgets.QSpacerItem(587, 48, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
-        self.gridLayout.addItem(spacerItem4, 4, 1, 1, 2)
-        Splash.setCentralWidget(self.centralwidget)
-        self.menubar = QtWidgets.QMenuBar(Splash)
-        self.menubar.setEnabled(False)
-        self.menubar.setGeometry(QtCore.QRect(0, 0, 872, 22))
-        self.menubar.setObjectName("menubar")
-        Splash.setMenuBar(self.menubar)
-        self.statusbar = QtWidgets.QStatusBar(Splash)
-        self.statusbar.setEnabled(True)
-        self.statusbar.setObjectName("statusbar")
-        Splash.setStatusBar(self.statusbar)
-#        progress = ThreadProgress(self)
-#        progress.mysignal.connect(self.progress)
-#        progress.start()
+FROM_SPLASH,_ = uic.loadUiType(os.path.join(os.path.dirname(__file__),splash_ui))
         
-#    @QtCore.pyqtSlot(int)
+class Splash(QtWidgets.QMainWindow, FROM_SPLASH):
+    switch_window = QtCore.pyqtSignal()
+    def __init__(self, parent = None):
+        super(Splash, self).__init__(parent)
+        QtWidgets.QMainWindow.__init__(self)
+        self.setupUi(self)
+        Qtwidgets.QMainWindow.setFullScreen()
+        pixmap = QtGui.QPixmap(splash_image)
+        self.splah_image.setPixmap(pixmap.scaled(350, 300))
+        progress = ThreadProgress(self)
+        progress.mysignal.connect(self.progress)
+        progress.start()
+        
+    @QtCore.pyqtSlot(int)
     def progress(self, i):
         self.progressBar.setValue(i)
         if i == 100:
             self.close()
             slideshow()
-#        self.progress()
 
-#    def progress(self):
-#        i = 0.0
-#        while i<101:
-#            i += 0.0001
-#            self.progressBar.setProperty("value", i)
-#        Splash.close()
-#            slideshow()
 """
 .......................................................................................................
 
@@ -211,16 +171,15 @@ class Welcome(QtWidgets.QWidget):
 
     def __init__(self):
         QtWidgets.QWidget.__init__(self)
-        self.setWindowTitle('Musical-PiCasso')
-        self.showFullScreen()
+        self.setWindowTitle('Main Window')
         layout = QtWidgets.QGridLayout()
 
         self.line_edit = QtWidgets.QLineEdit()
         layout.addWidget(self.line_edit)
 
-#        self.button = QtWidgets.QPushButton('Switch Window')
-#        self.button.clicked.connect(self.switch)
-#        layout.addWidget(self.button)
+        self.button = QtWidgets.QPushButton('Switch Window')
+        self.button.clicked.connect(self.switch)
+        layout.addWidget(self.button)
 
         self.setLayout(layout)
 
@@ -389,12 +348,9 @@ class Controller:
         pass
 
     def show_splash(self):
-#        self.splash = Splash()
-        ui = Ui_Splash()
-        ui.setupUi(Splash)
-        Splash.show()
-
+        self.splash = Splash()
 #        self.splash.switch_window.connect(self.show_main)
+        self.splash.show()
 
     def Welcome(self):
         self.welcome = Welcome()
@@ -402,13 +358,11 @@ class Controller:
         self.welcome.show()
 
 
-app = QtWidgets.QApplication(sys.argv)
-#MainWindow = QtWidgets.QMainWindow()
-#ui = Splash()
-#ui.setupUi(MainWindow)
-#MainWindow.show()
-Splash = QtWidgets.QMainWindow()
+
+app=QtWidgets.QApplication(sys.argv)
 controller = Controller()
 controller.show_splash()
-#controller.Welcome()
+controller.Welcome()
 sys.exit(app.exec_())
+
+

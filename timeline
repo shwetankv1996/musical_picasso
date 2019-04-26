@@ -1,0 +1,21 @@
+Last work
+
+Face_detect combnined with capture
+structurized the whole combination
+improved code to capture image till face contour detected 
+need to combine grabcut.py with face_detect from /usr/local/share/OpenCV/samples/python/grabcut.py
+
+18 apr
+full screen done 
+need to center the image
+
+25 apr
+magic wand on captured image done
+blend done on the cut image with existing
+need to blend after fixing the coordinates of both images
+
+26 apr
+source image face detected both
+source one face cut out done
+need to move face of both images together and the scale accordingly
+working on video capture when face detected in a region

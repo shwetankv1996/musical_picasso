@@ -1314,6 +1314,9 @@ QDateEdit::down-arrow:focus
     <property name="text">
      <string/>
     </property>
+    <property name="alignment">
+     <set>Qt::AlignCenter</set>
+    </property>
    </widget>
    <widget class="QProgressBar" name="progressBar">
     <property name="geometry">
