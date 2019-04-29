@@ -36,7 +36,7 @@ class Splash(QtWidgets.QMainWindow, FROM_SPLASH):
         super(Splash, self).__init__(parent)
         QtWidgets.QMainWindow.__init__(self)
         self.setupUi(self)
-        pixmap = QtGui.QPixmap("/home/sv-v1/projects/picasso/images/Musical Picasso 1.png")
+        pixmap = QtGui.QPixmap("/home/sv-v1/projects/picasso/images/Musical Picasso.png")
         self.splah_image.setPixmap(pixmap.scaled(350, 300))
         progress = ThreadProgress(self)
         progress.mysignal.connect(self.progress)
