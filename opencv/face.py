@@ -27,7 +27,7 @@ faces = tuple(face_cascade.detectMultiScale(gray, 1.3, 5))
 
 while faces is ():
 	cv.destroyAllWindows()
-	capture()
+#	capture()
 	togray()
 	faces = face_cascade.detectMultiScale(gray, 1.3, 5)
 

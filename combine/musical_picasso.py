@@ -118,6 +118,7 @@ Splash screen starts
 class ThreadProgress(QtCore.QThread):
     mysignal = QtCore.pyqtSignal(int)
     def __init__(self, parent=None):
+#        super(ThreadProgress, self).__init__(parent = None)
         QtCore.QThread.__init__(self, parent=None)
     def run(self):
         i = 0
@@ -125,12 +126,18 @@ class ThreadProgress(QtCore.QThread):
             time.sleep(0.1)
             self.mysignal.emit(i)
             i += 1
+        print("done/...................>>")
+#        self.progressBar.setValue(i)
+#        self.hide()
 
 class Ui_Splash(object):
     switch_window = QtCore.pyqtSignal()
     def setupUi(self, Splash):
+        screen_resolution = app.desktop().screenGeometry()
+        width, height = screen_resolution.width(), screen_resolution.height()
         Splash.setObjectName("Splash")
-        Splash.showFullScreen()
+        Splash.resize(width, height)
+        print(width,"\t", height)
         self.centralwidget = QtWidgets.QWidget(Splash)
         self.centralwidget.setStyleSheet("background-color: rgb(49, 54, 59);")
         self.centralwidget.setObjectName("centralwidget")
@@ -142,7 +149,7 @@ class Ui_Splash(object):
         self.gridLayout.addItem(spacerItem1, 1, 0, 3, 1)
         self.label = QtWidgets.QLabel(self.centralwidget)
         self.label.setText("")
-        self.label.setPixmap(QtGui.QPixmap(splash_image))
+        self.label.setPixmap((QtGui.QPixmap(splash_image)).scaled(550,550))
         self.label.setScaledContents(True)
         self.label.setAlignment(QtCore.Qt.AlignCenter)
         self.label.setObjectName("label")
@@ -153,7 +160,7 @@ class Ui_Splash(object):
         self.gridLayout.addItem(spacerItem3, 2, 1, 2, 2)
         self.progressBar = QtWidgets.QProgressBar(self.centralwidget)
         self.progressBar.setStyleSheet("background-color: rgb(210, 219, 230);")
-        self.progressBar.setProperty("value", 0)
+#        self.progressBar.setProperty("value", 0)
         self.progressBar.setObjectName("progressBar")
         self.gridLayout.addWidget(self.progressBar, 3, 2, 1, 1)
         spacerItem4 = QtWidgets.QSpacerItem(587, 48, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
@@ -168,15 +175,15 @@ class Ui_Splash(object):
         self.statusbar.setEnabled(True)
         self.statusbar.setObjectName("statusbar")
         Splash.setStatusBar(self.statusbar)
-#        progress = ThreadProgress(self)
-#        progress.mysignal.connect(self.progress)
+        progress = ThreadProgress(self)
+        progress.mysignal.connect(Ui_Splash.progress)
 #        progress.start()
         
-#    @QtCore.pyqtSlot(int)
+    @QtCore.pyqtSlot(int)
     def progress(self, i):
         self.progressBar.setValue(i)
         if i == 100:
-            self.close()
+            self.hide()
             slideshow()
 #        self.progress()
 
@@ -309,86 +316,16 @@ Slideshow ends
 
 
 
-"""
-
-def main():
-    app = QtWidgets.QApplication(sys.argv)
-    controller = Controller()
-    controller.show_login()
-    sys.exit(app.exec_())
-
-
-
-
-class MainWindow(QtWidgets.QWidget):
-
-    switch_window = QtCore.pyqtSignal(str)
-
-    def __init__(self):
-        QtWidgets.QWidget.__init__(self)
-        self.setWindowTitle('Main Window')
-        layout = QtWidgets.QGridLayout()
-
-        self.line_edit = QtWidgets.QLineEdit()
-        layout.addWidget(self.line_edit)
-
-        self.button = QtWidgets.QPushButton('Switch Window')
-        self.button.clicked.connect(self.switch)
-        layout.addWidget(self.button)
-
-        self.setLayout(layout)
-
-    def switch(self):
-        self.switch_window.emit(self.line_edit.text())
-
-
-class WindowTwo(QtWidgets.QWidget):
-
-    def __init__(self, text):
-        QtWidgets.QWidget.__init__(self)
-        self.setWindowTitle('Window Two')
-
-        layout = QtWidgets.QGridLayout()
-
-        self.label = QtWidgets.QLabel(text)
-        layout.addWidget(self.label)
-
-        self.button = QtWidgets.QPushButton('Close')
-        self.button.clicked.connect(self.close)
-
-        layout.addWidget(self.button)
-
-        self.setLayout(layout)
-
-
-class Login(QtWidgets.QWidget):
-
-    switch_window = QtCore.pyqtSignal()
-
-    def __init__(self):
-        QtWidgets.QWidget.__init__(self)
-        self.setWindowTitle('Login')
-
-        layout = QtWidgets.QGridLayout()
-
-        self.button = QtWidgets.QPushButton('Login')
-        self.button.clicked.connect(self.login)
-
-        layout.addWidget(self.button)
-
-        self.setLayout(layout)
-
-    def login(self):
-        self.switch_window.emit()
-"""
-
-
 class Controller:
 
     def __init__(self):
         pass
 
     def show_splash(self):
+#        splash = Ui_Splash()
+#        splash.switch_window.connect(self.show_main)
+#        splash.show()
+
 #        self.splash = Splash()
         ui = Ui_Splash()
         ui.setupUi(Splash)

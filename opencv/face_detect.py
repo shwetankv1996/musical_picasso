@@ -10,7 +10,7 @@ BLACK = [0,0,0]         # sure BG
 WHITE = [255,255,255]   # sure FG
 image_path = '/home/sv-v1/projects/picasso/images/capture.jpg'
 image_magic_path = '/home/sv-v1/projects/picasso/extracted_images/extracted.jpg'
-alpha = 0.4
+alpha = 1
 global rect1, rect2
 rect1 = (0,0,1,1)
 rect2 = (0,0,1,1)
@@ -195,7 +195,7 @@ cv.waitKey(0)
 # [display]
 cv.destroyAllWindows()
 beta = (1.0 - alpha)
-dst = cv.addWeighted(src1, alpha, src2, beta, 0.3)
+dst = cv.addWeighted(src1, alpha, src2, 1, 0.3)
 cv.imshow('dst', dst)
 cv.waitKey(0)
 # [display]

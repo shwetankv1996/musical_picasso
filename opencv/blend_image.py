@@ -12,8 +12,8 @@ input_alpha = float(raw_input().strip())
 if 0 <= alpha <= 1:
     alpha = input_alpha
 # [load]
-src1 = cv.imread(cv.samples.findFile('shwet.jpg'))
-src2 = cv.imread(cv.samples.findFile('picasso.jpg'))
+src1 = cv.imread(cv.samples.findFile('grabcut_out.png'))
+src2 = cv.imread(cv.samples.findFile('picasso2.jpg'))
 # [load]
 if src1 is None:
     print("Error loading src1")
