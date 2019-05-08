@@ -7,16 +7,56 @@
 # WARNING! All changes made in this file will be lost!
 
 from PyQt5 import QtCore, QtGui, QtWidgets
+import os
 
 
+supported_formats = ('.png', '.jpg', '.jpeg', '.bmp', '.dib', '.jpe', '.jp2', '.pgm', '.tiff', '.tif', '.ppm')
 
+
+class ImageLabel(QtWidgets.QLabel):
+    """ This widget displays an ImagePopup when the mouse enters its region """
+    def enterEvent(self, event):
+        self.p = ImagePopup(self)
+        self.p.show()
+        event.accept()
 
 class Picasso(QtWidgets.QMainWindow):
     def __init__(self, parent=None):
         super(Picasso, self).__init__(parent)
         self.setWindowTitle('Picasso Image Creator')
-        self.showFullScreen()
+#        self.showFullScreen()
         self.setStyleSheet("background-color: rgb(49, 54, 59);")
+        screen_resolution = app.desktop().screenGeometry()
+        width, height = screen_resolution.width(), screen_resolution.height()
+        self.setGeometry(0,0,width, height)
+        self.layout = QtWidgets.QGridLayout(self)
+#        self.setLayout(QtWidgets.QGridLayout(self))
+        row = col = 0
+        imagesPerRow = 3
+        pics = []
+        pathFolder = "/home/sv-v1/projects/picasso/images/"
+        for filename in os.listdir(pathFolder):
+            _path_image_read = os.path.join(pathFolder, filename)
+            if _path_image_read.lower().endswith(supported_formats):
+                pics.append(_path_image_read)
+
+        for pic in pics:
+#            label = ImageLabel()
+#            print(pic,"\n")
+            pict = QtWidgets.QLabel(self)
+            pict.setGeometry(col*2 +500, row*2 + 500, 400, 100)
+#            print(col*2 +50, row*2 + 50, 400, 100)
+            pict.setPixmap(QtGui.QPixmap(pic))
+
+#            pixmap = QtGui.QPixmap(pic)
+#            pixmap = pixmap.scaled(300, 300)
+#            label.setGeometry(300,300,300,300)
+#            label.setPixmap(pixmap)
+            self.layout.addWidget(pict, row, col)
+            col +=1
+            if col % imagesPerRow == 0:
+                row += 1
+                col = 0
 
 
 class Multiple(QtWidgets.QMainWindow):
@@ -58,8 +98,9 @@ class Ui_Main_menu(object):
         screen_resolution = app.desktop().screenGeometry()
         width, height = screen_resolution.width(), screen_resolution.height()
         Main_menu.setObjectName("Main_menu")
-        Main_menu.showFullScreen()
+#        Main_menu.showFullScreen()
         Main_menu.setAutoFillBackground(False)
+        Main_menu.setGeometry(0,0,width, height)
         Main_menu.setStyleSheet("background-color: rgb(49, 54, 59);")
         self.centralwidget = QtWidgets.QWidget(Main_menu)
         self.centralwidget.setObjectName("centralwidget")
