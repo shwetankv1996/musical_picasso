@@ -118,7 +118,7 @@ Splash screen starts
 class ThreadProgress(QtCore.QThread):
     mysignal = QtCore.pyqtSignal(int)
     def __init__(self, parent=None):
-#        super(ThreadProgress, self).__init__(parent = None)
+
         QtCore.QThread.__init__(self, parent=None)
     def run(self):
         i = 0
@@ -127,10 +127,9 @@ class ThreadProgress(QtCore.QThread):
             self.mysignal.emit(i)
             i += 1
         print("done/...................>>")
-#        self.progressBar.setValue(i)
-#        self.hide()
 
-class Ui_Splash(object):
+
+class Ui_Splash(QtWidgets.QMainWindow):
     switch_window = QtCore.pyqtSignal()
     def setupUi(self, Splash):
         screen_resolution = app.desktop().screenGeometry()
@@ -175,16 +174,29 @@ class Ui_Splash(object):
         self.statusbar.setEnabled(True)
         self.statusbar.setObjectName("statusbar")
         Splash.setStatusBar(self.statusbar)
+
         progress = ThreadProgress(self)
-        progress.mysignal.connect(Ui_Splash.progress)
-#        progress.start()
+        progress.mysignal.connect(self.progress)
+        progress.start()
         
     @QtCore.pyqtSlot(int)
     def progress(self, i):
         self.progressBar.setValue(i)
         if i == 100:
             self.hide()
-            slideshow()
+#            main = Main(self)
+#            main.show()
+
+"""
+        i = 0
+        while i<101:
+            time.sleep(0.1)
+            self.progressBar.setValue(i)
+#            self.mysignal.emit(i)
+            i += 1
+            if i == 100:
+                self.hide()
+"""
 #        self.progress()
 
 #    def progress(self):
@@ -347,5 +359,6 @@ app = QtWidgets.QApplication(sys.argv)
 Splash = QtWidgets.QMainWindow()
 controller = Controller()
 controller.show_splash()
+slideshow()
 #controller.Welcome()
 sys.exit(app.exec_())

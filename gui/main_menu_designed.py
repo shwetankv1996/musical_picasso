@@ -8,9 +8,10 @@
 
 from PyQt5 import QtCore, QtGui, QtWidgets
 import os
-
+import time
 
 supported_formats = ('.png', '.jpg', '.jpeg', '.bmp', '.dib', '.jpe', '.jp2', '.pgm', '.tiff', '.tif', '.ppm')
+splash_image = "/home/sv-v1/projects/picasso/images/Musical Picasso.png"
 
 
 class ImageLabel(QtWidgets.QLabel):
@@ -19,6 +20,9 @@ class ImageLabel(QtWidgets.QLabel):
         self.p = ImagePopup(self)
         self.p.show()
         event.accept()
+
+
+
 
 class Picasso(QtWidgets.QMainWindow):
     def __init__(self, parent=None):
@@ -168,10 +172,28 @@ class Ui_Main_menu(object):
 """
 
 
+class splash(QtWidgets.QMainWindow):
+    def __init__(self, parent = None):
+        super(splash, self).__init__(parent)
+        self.setWindowTitle('Musical Picasso')
+#        self.showFullScreen()
+        self.setStyleSheet("background-color: rgb(0, 0, 00);")
+        screen_resolution = app.desktop().screenGeometry()
+        width, height = screen_resolution.width(), screen_resolution.height()
+        self.setGeometry(0,0,width, height)
+        pic = QtWidgets.QLabel()
+        pic.setText("")
+        pic.setPixmap((QtGui.QPixmap(splash_image)).scaled(550,550))
+        pic.setGeometry(0,0,200,200)
+
 
 if __name__ == "__main__":
     import sys
     app = QtWidgets.QApplication(sys.argv)
+    splash = splash()
+    splash.show()
+    time.sleep(5)
+    splash.hide()
     Main_menu = QtWidgets.QMainWindow()
     ui = Ui_Main_menu()
     ui.setupUi(Main_menu)

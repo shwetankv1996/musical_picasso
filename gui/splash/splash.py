@@ -7,7 +7,7 @@
 # WARNING! All changes made in this file will be lost!
 
 from PyQt5 import QtCore, QtGui, QtWidgets
-
+import time
 
 class Ui_Splash(object):
     def setupUi(self, Splash):
@@ -50,13 +50,20 @@ class Ui_Splash(object):
         self.statusbar.setEnabled(True)
         self.statusbar.setObjectName("statusbar")
         Splash.setStatusBar(self.statusbar)
+        print("splash")
+        Splash.show()
+    def bar(self):
+        i = 0
+        while i<102:
+            print(i)
+            time.sleep(0.05)
+            self.progressBar.setValue(i)
+#            self.mysignal.emit(i)
+            i += 1
+            if i == 101:
+                break
 
-#        self.retranslateUi(Splash)
-#        QtCore.QMetaObject.connectSlotsByName(Splash)
 
-#    def retranslateUi(self, Splash):
-#        _translate = QtCore.QCoreApplication.translate
-#        Splash.setWindowTitle(_translate("Splash", "MainWindow"))
 
 
 
@@ -68,4 +75,5 @@ if __name__ == "__main__":
     ui = Ui_Splash()
     ui.setupUi(Splash)
     Splash.show()
+    ui.bar()
     sys.exit(app.exec_())
