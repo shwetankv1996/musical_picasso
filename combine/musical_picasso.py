@@ -4,6 +4,9 @@ import sys
 from PyQt5 import QtCore, QtWidgets, uic, QtGui
 import time
 
+app = QtWidgets.QApplication(sys.argv)
+screen_resolution = app.desktop().screenGeometry()
+width, height = screen_resolution.width(), screen_resolution.height()
 
 #splash image path
 splash_image = "/home/sv-v1/projects/picasso/images/Musical Picasso.png"
@@ -12,9 +15,9 @@ splash_ui = "/home/sv-v1/projects/picasso/gui/splashscreen/splash.ui"
 #Image Folder Path
 path_folder = "/home/sv-v1/projects/picasso/images/"
 #Width of slideshow
-slideshow_width = 1500
+slideshow_width = width
 #Height of slideshow
-slideshow_height = 1000
+slideshow_height = height
 #Transition time slideshow
 slideshow_trasnition_time = 2
 #Image stable time
@@ -55,11 +58,10 @@ def wait_key(time_seconds):
 		#state True if Esc key is pressed
 		state = True
 	if k == enter:
-		controller.Welcome()
 		cv2.destroyWindow(window_name)
 		state = True
-	
-	#return state	
+		controller.Welcome()
+#return state	
 	return state	
 	
 #Load image path of all images		
@@ -123,20 +125,21 @@ class ThreadProgress(QtCore.QThread):
     def run(self):
         i = 0
         while i<101:
-            time.sleep(0.1)
+            time.sleep(0.05)
             self.mysignal.emit(i)
             i += 1
-        print("done/...................>>")
 
 
 class Ui_Splash(QtWidgets.QMainWindow):
     switch_window = QtCore.pyqtSignal()
     def setupUi(self, Splash):
-        screen_resolution = app.desktop().screenGeometry()
-        width, height = screen_resolution.width(), screen_resolution.height()
         Splash.setObjectName("Splash")
         Splash.resize(width, height)
+        Splash.showFullScreen()
+        print("----------------Screen Size--------------------\n\nWidth \theight")
         print(width,"\t", height)
+        print("\n-----------------------------------------------\n")
+
         self.centralwidget = QtWidgets.QWidget(Splash)
         self.centralwidget.setStyleSheet("background-color: rgb(49, 54, 59);")
         self.centralwidget.setObjectName("centralwidget")
@@ -175,37 +178,13 @@ class Ui_Splash(QtWidgets.QMainWindow):
         self.statusbar.setObjectName("statusbar")
         Splash.setStatusBar(self.statusbar)
 
-        progress = ThreadProgress(self)
-        progress.mysignal.connect(self.progress)
-        progress.start()
-        
     @QtCore.pyqtSlot(int)
     def progress(self, i):
         self.progressBar.setValue(i)
         if i == 100:
-            self.hide()
-#            main = Main(self)
-#            main.show()
+            Splash.hide()
+            slideshow()
 
-"""
-        i = 0
-        while i<101:
-            time.sleep(0.1)
-            self.progressBar.setValue(i)
-#            self.mysignal.emit(i)
-            i += 1
-            if i == 100:
-                self.hide()
-"""
-#        self.progress()
-
-#    def progress(self):
-#        i = 0.0
-#        while i<101:
-#            i += 0.0001
-#            self.progressBar.setProperty("value", i)
-#        Splash.close()
-#            slideshow()
 """
 .......................................................................................................
 
@@ -231,20 +210,25 @@ class Welcome(QtWidgets.QWidget):
     def __init__(self):
         QtWidgets.QWidget.__init__(self)
         self.setWindowTitle('Musical-PiCasso')
+        self.setStyleSheet("background-color: rgb(49, 54, 59);")
         self.showFullScreen()
         layout = QtWidgets.QGridLayout()
-
-        self.line_edit = QtWidgets.QLineEdit()
-        layout.addWidget(self.line_edit)
-
-#        self.button = QtWidgets.QPushButton('Switch Window')
-#        self.button.clicked.connect(self.switch)
-#        layout.addWidget(self.button)
-
-        self.setLayout(layout)
-
-    def switch(self):
-        self.switch_window.emit(self.line_edit.text())
+        self.label = QtWidgets.QLabel()
+        font = QtGui.QFont()
+        font.setPointSize(28)
+        font.setBold(True)
+        font.setWeight(75)
+        self.label.setFont(font)
+        self.label.setText("Welcome\n\n To \n\nPiCasso Art Creator")
+        self.label.setStyleSheet("color: rgb(255, 255, 255);")
+        self.label.setAlignment(QtCore.Qt.AlignCenter)
+        self.label.setObjectName("label")
+        vbox = QtWidgets.QVBoxLayout()
+        vbox.addStretch()
+        vbox.addWidget(self.label)
+        vbox.addStretch()
+        self.setLayout(vbox)
+        QtCore.QTimer.singleShot(3000, controller.show_menu)
 
 
 """
@@ -273,7 +257,8 @@ def slideshow():
 	#Create a Window
 	#cv2.WINDOW_NORMAL = Enables window to resize.
 	#cv2.WINDOW_AUTOSIZE = Default flag. Auto resizes window size to fit an image.
-	cv2.namedWindow(window_name,cv2.WINDOW_NORMAL)
+	cv2.namedWindow(window_name,cv2.WND_PROP_FULLSCREEN)
+	cv2.setWindowProperty(window_name,cv2.WND_PROP_FULLSCREEN,cv2.WINDOW_FULLSCREEN)
 	#Create first image	
 	img_one = None	
 	#Laod every image file path
@@ -327,38 +312,238 @@ Slideshow ends
 """
 
 
+"""
+'''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+
+Picasso Page Starts
+
+'''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+"""
+
+
+class Picasso(QtWidgets.QMainWindow):
+    def __init__(self, parent=None):
+        super(Picasso, self).__init__(parent)
+        self.setWindowTitle('Picasso Image Creator')
+#        self.showFullScreen()
+        self.setStyleSheet("background-color: rgb(49, 54, 59);")
+        screen_resolution = app.desktop().screenGeometry()
+        width, height = screen_resolution.width(), screen_resolution.height()
+        self.setGeometry(0,0,width, height)
+
+        row = col = 0
+        imagesPerRow = 3
+        pics = []
+        pathFolder = "/home/sv-v1/projects/picasso/images/"
+        for filename in os.listdir(pathFolder):
+            _path_image_read = os.path.join(pathFolder, filename)
+            if _path_image_read.lower().endswith(supported_formats):
+                pics.append(_path_image_read)
+
+        for pic in pics:
+            pict = QtWidgets.QLabel(self)
+            pict.setGeometry(col*200 +500, row*200 + 500, 400, 100)
+            col+=1
+            row+=1
+            pict.setPixmap(QtGui.QPixmap(pic))
+
+
+"""
+'''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+
+Picasso Page Ends
+
+'''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+"""
+
+
+"""
+'''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+
+Multiple Page Starts
+
+'''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+"""
+class Multiple(QtWidgets.QMainWindow):
+    def __init__(self, parent=None):
+        super(Multiple, self).__init__(parent)
+        self.showFullScreen()
+        self.setStyleSheet("background-color: rgb(49, 54, 59);")
+
+"""
+'''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+
+Multiple Page Ends
+
+'''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+"""
+
+"""
+'''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+
+Gif Page Starts
+
+'''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+"""
+class Gif(QtWidgets.QMainWindow):
+    def __init__(self, parent=None):
+        super(Gif, self).__init__(parent)
+        self.showFullScreen()
+        self.setStyleSheet("background-color: rgb(49, 54, 59);")
+
+"""
+'''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+
+Gif Page Ends
+
+'''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+"""
+
+
+
+"""
+'''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+
+Main_Menu Starts
+
+'''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+"""
+
+
+class Ui_Main_menu(QtWidgets.QMainWindow):
+    def setupUi(self):
+        screen_resolution = app.desktop().screenGeometry()
+        width, height = screen_resolution.width(), screen_resolution.height()
+        self.setObjectName("Main_menu")
+        self.showFullScreen()
+        self.setAutoFillBackground(False)
+        self.setGeometry(0,0,width, height)
+        self.setStyleSheet("background-color: rgb(49, 54, 59);")
+        self.centralwidget = QtWidgets.QWidget()
+        self.centralwidget.setObjectName("centralwidget")
+        self.centralwidget.setGeometry(0, 0, width, height)
+        self.gridLayout = QtWidgets.QGridLayout(self.centralwidget)
+        self.gridLayout.setObjectName("gridLayout")
+        spacerItem = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
+        self.gridLayout.addItem(spacerItem, 0, 4, 1, 1)
+        spacerItem1 = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
+        self.gridLayout.addItem(spacerItem1, 0, 0, 1, 1)
+        self.pushButton_2 = QtWidgets.QPushButton(self.centralwidget)
+        self.pushButton_2.setObjectName("pushButton_2")
+        self.pushButton_2.setIcon(QtGui.QIcon('/home/sv-v1/projects/picasso/images/gif_icon.jpeg'))
+        self.pushButton_2.setIconSize(QtCore.QSize(200, 200))
+        self.pushButton_2.setFlat(True)
+        self.gridLayout.addWidget(self.pushButton_2, 0, 5, 1, 1)
+        spacerItem2 = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
+        self.gridLayout.addItem(spacerItem2, 0, 2, 1, 1)
+        self.pushButton = QtWidgets.QPushButton(self.centralwidget)
+        self.pushButton.setObjectName("pushButton")
+        self.pushButton.setIcon(QtGui.QIcon('/home/sv-v1/projects/picasso/images/multiple_icon.jpeg'))
+        self.pushButton.setIconSize(QtCore.QSize(200, 200))
+        self.pushButton.setFlat(True)
+        self.gridLayout.addWidget(self.pushButton, 0, 3, 1, 1)
+        self.pushButton_3 = QtWidgets.QPushButton(self.centralwidget)
+        self.pushButton_3.setObjectName("pushButton_3")
+        self.pushButton_3.setIcon(QtGui.QIcon('/home/sv-v1/projects/picasso/images/picasso_icon.jpg'))
+        self.pushButton_3.setIconSize(QtCore.QSize(200, 200))
+        self.pushButton_3.setFlat(True)
+        self.gridLayout.addWidget(self.pushButton_3, 0, 1, 1, 1)
+        spacerItem3 = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
+        self.gridLayout.addItem(spacerItem3, 0, 6, 1, 1)
+        self.setCentralWidget(self.centralwidget)
+
+        self.pushButton.clicked.connect(self.on_pushButton_clicked)
+
+        self.pushButton_2.clicked.connect(self.on_pushButton2_clicked)
+
+        self.pushButton_3.clicked.connect(self.on_pushButton3_clicked)
+
+    def on_pushButton_clicked(self):
+        print("multiple")
+        self.close()
+        self.controller = Controller()
+        self.controller.Multiple()
+
+
+    def on_pushButton2_clicked(self):
+        print("gif")
+        self.close()
+        self.controller = Controller()
+        self.controller.Gif()
+
+
+    def on_pushButton3_clicked(self):
+        print("picasso")
+        self.close()
+        self.controller = Controller()
+        self.controller.Picasso()
+
+"""
+'''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+
+Main_menu ends
+
+'''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+"""
+
+
+"""
+'''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+
+Controller Starts
+
+'''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+"""
+
 
 class Controller:
 
     def __init__(self):
         pass
 
-    def show_splash(self):
-#        splash = Ui_Splash()
-#        splash.switch_window.connect(self.show_main)
-#        splash.show()
-
-#        self.splash = Splash()
-        ui = Ui_Splash()
-        ui.setupUi(Splash)
-        Splash.show()
-
-#        self.splash.switch_window.connect(self.show_main)
-
     def Welcome(self):
         self.welcome = Welcome()
-#        self.welcome.switch_window.connect(self.show_main)
+#        self.welcome.switch_window.connect(self.show_menu)
         self.welcome.show()
 
+    def show_menu(self):
+        self.welcome.close()
+        self.ui = Ui_Main_menu()
+        self.ui.setupUi()
+        self.ui.show()
 
-app = QtWidgets.QApplication(sys.argv)
-#MainWindow = QtWidgets.QMainWindow()
-#ui = Splash()
-#ui.setupUi(MainWindow)
-#MainWindow.show()
+    def Picasso(self):
+        self.Picasso = Picasso()
+        self.Picasso.show()
+
+    def Multiple(self):
+        self.Multiple = Multiple()
+        self.Multiple.show()
+
+    def Gif(self):
+        self.Gif = Gif()
+        self.Gif.show()
+
+
+"""
+'''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+
+Controller ends
+
+'''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+"""
+
+
 Splash = QtWidgets.QMainWindow()
 controller = Controller()
-controller.show_splash()
-slideshow()
-#controller.Welcome()
+
+ui = Ui_Splash()
+ui.setupUi(Splash)
+Splash.show()
+
+progress = ThreadProgress()
+progress.mysignal.connect(ui.progress)
+progress.start()
+#controller.show_menu()
+
 sys.exit(app.exec_())

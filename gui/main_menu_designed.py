@@ -1,26 +1,8 @@
-# -*- coding: utf-8 -*-
-
-# Form implementation generated from reading ui file 'main_menu.ui'
-#
-# Created by: PyQt5 UI code generator 5.12.1
-#
-# WARNING! All changes made in this file will be lost!
-
 from PyQt5 import QtCore, QtGui, QtWidgets
 import os
 import time
 
 supported_formats = ('.png', '.jpg', '.jpeg', '.bmp', '.dib', '.jpe', '.jp2', '.pgm', '.tiff', '.tif', '.ppm')
-splash_image = "/home/sv-v1/projects/picasso/images/Musical Picasso.png"
-
-
-class ImageLabel(QtWidgets.QLabel):
-    """ This widget displays an ImagePopup when the mouse enters its region """
-    def enterEvent(self, event):
-        self.p = ImagePopup(self)
-        self.p.show()
-        event.accept()
-
 
 
 
@@ -86,16 +68,16 @@ class Controller:
 
 
 
-class Ui_Main_menu(object):
-    def setupUi(self, Main_menu):
+class Ui_Main_menu(QtWidgets.QMainWindow):
+    def setupUi(self):
         screen_resolution = app.desktop().screenGeometry()
         width, height = screen_resolution.width(), screen_resolution.height()
-        Main_menu.setObjectName("Main_menu")
-#        Main_menu.showFullScreen()
-        Main_menu.setAutoFillBackground(False)
-        Main_menu.setGeometry(0,0,width, height)
-        Main_menu.setStyleSheet("background-color: rgb(49, 54, 59);")
-        self.centralwidget = QtWidgets.QWidget(Main_menu)
+        self.setObjectName("Main_menu")
+        self.showFullScreen()
+        self.setAutoFillBackground(False)
+        self.setGeometry(0,0,width, height)
+        self.setStyleSheet("background-color: rgb(49, 54, 59);")
+        self.centralwidget = QtWidgets.QWidget()
         self.centralwidget.setObjectName("centralwidget")
         self.centralwidget.setGeometry(0, 0, width, height)
         self.gridLayout = QtWidgets.QGridLayout(self.centralwidget)
@@ -123,18 +105,7 @@ class Ui_Main_menu(object):
         self.gridLayout.addWidget(self.pushButton_3, 0, 1, 1, 1)
         spacerItem3 = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
         self.gridLayout.addItem(spacerItem3, 0, 6, 1, 1)
-        Main_menu.setCentralWidget(self.centralwidget)
-        self.menubar = QtWidgets.QMenuBar(Main_menu)
-        self.menubar.setEnabled(False)
-        self.menubar.setGeometry(QtCore.QRect(0, 0, 800, 22))
-        self.menubar.setObjectName("menubar")
-        Main_menu.setMenuBar(self.menubar)
-        self.statusbar = QtWidgets.QStatusBar(Main_menu)
-        self.statusbar.setObjectName("statusbar")
-        Main_menu.setStatusBar(self.statusbar)
-
-        self.retranslateUi(Main_menu)
-        QtCore.QMetaObject.connectSlotsByName(Main_menu)
+        self.setCentralWidget(self.centralwidget)
 
         self.pushButton.clicked.connect(self.on_pushButton_clicked)
 
@@ -144,58 +115,31 @@ class Ui_Main_menu(object):
 
     def on_pushButton_clicked(self):
         print("multiple")
-        Main_menu.close()
+        self.close()
         self.controller = Controller()
         self.controller.Multiple()
 
 
     def on_pushButton2_clicked(self):
         print("gif")
-        Main_menu.close()
+        self.close()
         self.controller = Controller()
         self.controller.Gif()
 
 
     def on_pushButton3_clicked(self):
         print("picasso")
-        Main_menu.close()
+        self.close()
         self.controller = Controller()
         self.controller.Picasso()
 
-
-    def retranslateUi(self, Main_menu):
-        _translate = QtCore.QCoreApplication.translate
-        Main_menu.setWindowTitle(_translate("Main_menu", "MainWindow"))
-"""        self.pushButton_2.setText(_translate("Main_menu", "gif"))
-        self.pushButton.setText(_translate("Main_menu", "multiple"))
-        self.pushButton_3.setText(_translate("Main_menu", "Picasso"))
-"""
-
-
-class splash(QtWidgets.QMainWindow):
-    def __init__(self, parent = None):
-        super(splash, self).__init__(parent)
-        self.setWindowTitle('Musical Picasso')
-#        self.showFullScreen()
-        self.setStyleSheet("background-color: rgb(0, 0, 00);")
-        screen_resolution = app.desktop().screenGeometry()
-        width, height = screen_resolution.width(), screen_resolution.height()
-        self.setGeometry(0,0,width, height)
-        pic = QtWidgets.QLabel()
-        pic.setText("")
-        pic.setPixmap((QtGui.QPixmap(splash_image)).scaled(550,550))
-        pic.setGeometry(0,0,200,200)
 
 
 if __name__ == "__main__":
     import sys
     app = QtWidgets.QApplication(sys.argv)
-    splash = splash()
-    splash.show()
-    time.sleep(5)
-    splash.hide()
-    Main_menu = QtWidgets.QMainWindow()
+#    Main_menu = QtWidgets.QMainWindow()
     ui = Ui_Main_menu()
-    ui.setupUi(Main_menu)
-    Main_menu.show()
+    ui.setupUi()
+    ui.show()
     sys.exit(app.exec_())
