@@ -262,6 +262,7 @@ def slideshow():
 	#Create first image	
 	img_one = None	
 	#Laod every image file path
+#	while True:
 	for imge_path in img_path_list:
 		#if image is none load image
 		if img_one is None:
