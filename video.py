@@ -33,9 +33,12 @@ while(1):
 	ret, frame = cap.read()
 	cv2.imshow("frame",frame)
 #	frame = cv2.flip( frame, 1 )
-	frame = detect()
+#	frame = detect()
 	k = cv2.waitKey(1)
 	if k == 27:
+		break
+	elif k == ord("s"):
+		cv2.imwrite("/home/sv-v1/projects/picasso/extracted_images/style.jpg", frame)
 		break
 cv2.destroyAllWindows()
 """
