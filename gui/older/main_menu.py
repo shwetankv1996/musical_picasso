@@ -1,62 +1,90 @@
-import sys
-from PyQt5.QtCore import *
-from PyQt5.QtGui import *
-from PyQt5.QtWidgets import *
+# -*- coding: utf-8 -*-
 
-class main_menu(QWidget):
-	def __init__(self):
-		QWidget.__init__(self)
-		screen_resolution = app.desktop().screenGeometry()
-		width, height = screen_resolution.width(), screen_resolution.height()
-		btn_y_line = height / 4
-		btn_x_line = width - 600
-		print(width, "\t", height, "\t", btn_x_line)
-		self.setBackgroundRole(QPalette.Base)
-		self.setStyleSheet("background-color: rgb(49, 54, 59);")
-		self.setGeometry(0, 0, width, height)
-		self.button1 = QPushButton('',self)
-		self.button1.setIcon(QIcon('/home/sv-v1/projects/picasso/images/picasso_icon.jpg'))
-		self.button1.setIconSize(QSize(200, 200))
-		self.button1.move(btn_x_line/4,btn_y_line)
-#		layout1 = QVBoxLayout(self)
-#		layout1.addWidget(self.button1)
-		self.button2 = QPushButton('',self)
-		self.button2.setIcon(QIcon('/home/sv-v1/projects/picasso/images/multiple_shot_icon.jpeg'))
-		self.button2.setIconSize(QSize(200, 200))
-		self.button2.move(width/2 - 100,btn_y_line)
-#		layout2 = QVBoxLayout(self)
-#		layout2.addWidget(self.button2)
-		self.button3 = QPushButton('',self)
-		self.button3.setIcon(QIcon('/home/sv-v1/projects/picasso/images/gif_icon.jpeg'))
-		self.button3.setIconSize(QSize(200, 200))
-		self.button3.move(btn_x_line,btn_y_line)
-#		layout3 = QVBoxLayout(self)
-#		layout3.addWidget(self.button3)
-		grid = QGridLayout()
-		layout = QVBoxLayout(self)
-		btn_layout = QHBoxLayout()
-		# !!!
-		self.spacer1 = QSpacerItem(0, 0, QSizePolicy.Expanding, QSizePolicy.Minimum)
-		self.spacer2 = QSpacerItem(0, 0, QSizePolicy.Expanding, QSizePolicy.Minimum)
-		self.spacer3 = QSpacerItem(0, 0, QSizePolicy.Expanding, QSizePolicy.Minimum)
-		grid.addItem(self.spacer1, 1, 0)
-		grid.addWidget(self.button1, 1, 1)
-		grid.addItem(self.spacer2, 1, 2)
-		grid.addWidget(self.button2, 1, 3)
-		grid.addItem(self.spacer3, 1, 4)
-		grid.addWidget(self.button3, 1, 5)
-		self.setLayout(grid)
-"""
-		btn_layout.addItem(self.spacer1,1)
-		btn_layout.addWidget(self.button1,2)
-		btn_layout.addItem(self.spacer2,3)
-		btn_layout.addWidget(self.button2, 4)
-		btn_layout.addItem(self.spacer3,5)
-		btn_layout.addWidget(self.button3,6)
-		layout.addLayout(btn_layout)
-"""
+# Form implementation generated from reading ui file 'main_designed.ui'
+#
+# Created by: PyQt5 UI code generator 5.12.1
+#
+# WARNING! All changes made in this file will be lost!
 
-app = QApplication(sys.argv)
-a = main_menu()
-a.show()
-sys.exit(app.exec_())
+from PyQt5 import QtCore, QtGui, QtWidgets
+
+
+class Ui_Main_menu(object):
+    def setupUi(self, Main_menu):
+        Main_menu.setObjectName("Main_menu")
+        Main_menu.resize(928, 682)
+        Main_menu.setAutoFillBackground(False)
+        Main_menu.setStyleSheet("background-color: rgb(49, 54, 59);")
+        self.centralwidget = QtWidgets.QWidget(Main_menu)
+        self.centralwidget.setObjectName("centralwidget")
+        self.gridLayout_2 = QtWidgets.QGridLayout(self.centralwidget)
+        self.gridLayout_2.setObjectName("gridLayout_2")
+        self.gridLayout = QtWidgets.QGridLayout()
+        self.gridLayout.setObjectName("gridLayout")
+        spacerItem = QtWidgets.QSpacerItem(20, 40, QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Expanding)
+        self.gridLayout.addItem(spacerItem, 1, 0, 1, 1)
+        self.pushButton_3 = QtWidgets.QPushButton(self.centralwidget)
+        self.pushButton_3.setObjectName("pushButton_3")
+        self.gridLayout.addWidget(self.pushButton_3, 2, 1, 1, 1)
+        self.pushButton = QtWidgets.QPushButton(self.centralwidget)
+        self.pushButton.setObjectName("pushButton")
+        self.gridLayout.addWidget(self.pushButton, 2, 3, 1, 1)
+        self.pushButton_2 = QtWidgets.QPushButton(self.centralwidget)
+        self.pushButton_2.setIcon(QtGui.QIcon('/home/sv-v1/projects/picasso/images/gif_icon.jpeg'))
+        self.pushButton_2.setIconSize(QtCore.QSize(200, 200))
+        self.pushButton_2.setObjectName("pushButton_2")
+        self.gridLayout.addWidget(self.pushButton_2, 2, 5, 1, 1)
+        self.label_2 = QtWidgets.QLabel(self.centralwidget)
+        self.label_2.setObjectName("label_2")
+        self.gridLayout.addWidget(self.label_2, 3, 3, 1, 1)
+        self.label_3 = QtWidgets.QLabel(self.centralwidget)
+        self.label_3.setObjectName("label_3")
+        self.gridLayout.addWidget(self.label_3, 3, 5, 1, 1)
+        self.label = QtWidgets.QLabel(self.centralwidget)
+        self.label.setObjectName("label")
+        self.gridLayout.addWidget(self.label, 3, 1, 1, 1)
+        spacerItem1 = QtWidgets.QSpacerItem(155, 22, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
+        self.gridLayout.addItem(spacerItem1, 2, 2, 1, 1)
+        spacerItem2 = QtWidgets.QSpacerItem(156, 22, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
+        self.gridLayout.addItem(spacerItem2, 2, 4, 1, 1)
+        spacerItem3 = QtWidgets.QSpacerItem(20, 40, QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Expanding)
+        self.gridLayout.addItem(spacerItem3, 4, 2, 1, 1)
+        spacerItem4 = QtWidgets.QSpacerItem(156, 22, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
+        self.gridLayout.addItem(spacerItem4, 2, 0, 1, 1)
+        spacerItem5 = QtWidgets.QSpacerItem(155, 22, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
+        self.gridLayout.addItem(spacerItem5, 2, 6, 1, 1)
+        self.gridLayout_2.addLayout(self.gridLayout, 0, 0, 1, 1)
+        Main_menu.setCentralWidget(self.centralwidget)
+        self.menubar = QtWidgets.QMenuBar(Main_menu)
+        self.menubar.setEnabled(False)
+        self.menubar.setGeometry(QtCore.QRect(0, 0, 928, 22))
+        self.menubar.setObjectName("menubar")
+        Main_menu.setMenuBar(self.menubar)
+        self.statusbar = QtWidgets.QStatusBar(Main_menu)
+        self.statusbar.setObjectName("statusbar")
+        Main_menu.setStatusBar(self.statusbar)
+
+        self.retranslateUi(Main_menu)
+        QtCore.QMetaObject.connectSlotsByName(Main_menu)
+
+    def retranslateUi(self, Main_menu):
+        _translate = QtCore.QCoreApplication.translate
+        Main_menu.setWindowTitle(_translate("Main_menu", "MainWindow"))
+        self.pushButton_3.setText(_translate("Main_menu", "Picasso"))
+        self.pushButton.setText(_translate("Main_menu", "multiple"))
+        self.pushButton_2.setText(_translate("Main_menu", "gif"))
+        self.label_2.setText(_translate("Main_menu", "Multiple Shot Capture"))
+        self.label_3.setText(_translate("Main_menu", "Create Stop Motion"))
+        self.label.setText(_translate("Main_menu", "Picasso Image Creator"))
+
+
+
+
+if __name__ == "__main__":
+    import sys
+    app = QtWidgets.QApplication(sys.argv)
+    Main_menu = QtWidgets.QMainWindow()
+    ui = Ui_Main_menu()
+    ui.setupUi(Main_menu)
+    Main_menu.show()
+    sys.exit(app.exec_())

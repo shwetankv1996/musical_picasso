@@ -42,77 +42,6 @@ max_weight = 1
 #image styling models
 models="/home/sv-v1/projects/picasso/neural-style-transfer/models"
 
-#Range function with float 
-def range_step(start, step, stop):
-	range = start
-	while range < stop:
-		yield range
-		range += step
-
-#Wait Key function with escape handling		
-def wait_key(time_seconds):
-	#state False if no Esc key is pressed
-	state = False
-	#Check if any key is pressed. second multiplier for millisecond: 1000
-	k = cv2.waitKey(int(time_seconds * 1000))
-	#Check if ESC key is pressed. ASCII Keycode of ESC=27
-	if k == esc_keycode:  
-		#Destroy Window
-		cv2.destroyWindow(window_name)
-		#state True if Esc key is pressed
-		state = True
-	if k == enter:
-		cv2.destroyWindow(window_name)
-		state = True
-		controller.Welcome()
-#return state	
-	return state	
-	
-#Load image path of all images		
-def load_img_path(pathFolder):
-	#empty list
-	_path_image_list = []
-	#Loop for every file in folder path
-	for filename in os.listdir(pathFolder):
-		#Image Read Path
-		_path_image_read = os.path.join(pathFolder, filename)
-		#Check if file path has supported image format and then only append to list
-		if _path_image_read.lower().endswith(supported_formats):
-			_path_image_list.append(_path_image_read)
-        
-	_path_image_list = sorted(list(_path_image_list))
-	print(_path_image_list)
-#Return image path list
-	return _path_image_list
-#Load image and return with resize	
-def load_img(pathImageRead, resizeWidth, resizeHeight): 	
-	#Load an image
-	#cv2.IMREAD_COLOR = Default flag for imread. Loads color image.
-	#cv2.IMREAD_GRAYSCALE = Loads image as grayscale.
-	#cv2.IMREAD_UNCHANGED = Loads image which have alpha channels.
-	#cv2.IMREAD_ANYCOLOR = Loads image in any possible format
-	#cv2.IMREAD_ANYDEPTH = Loads image in 16-bit/32-bit otherwise converts it to 8-bit
-	_img_input = cv2.imread(pathImageRead,cv2.IMREAD_ANYCOLOR)
-
-	#Check if image is not empty
-	if _img_input is not None:
-		#Get read images height and width
-		_img_height, _img_width = _img_input.shape[:2]
-	
-		#if image size is more than resize perform cv2.INTER_AREA interpolation otherwise cv2.INTER_LINEAR for zooming
-		if _img_width > resizeWidth or _img_height > resizeHeight:
-			interpolation = cv2.INTER_AREA
-		else:
-			interpolation = cv2.INTER_LINEAR
-		
-		# perform the actual resizing of the image and show it
-		_img_resized = cv2.resize(_img_input, (resizeWidth, resizeHeight), interpolation)
-	else:
-		#if image is empty
-		_img_resized = _img_input
-	#return the resized image	
-	return _img_resized	
-
 
 
 """
@@ -201,49 +130,77 @@ Splash screen ends
 
 
 
-"""
-.......................................................................................................
-
-Welcome screen starts
-
-.......................................................................................................
-"""
-
-class Welcome(QtWidgets.QWidget):
-
-    switch_window = QtCore.pyqtSignal(str)
-
-    def __init__(self):
-        QtWidgets.QWidget.__init__(self)
-        self.setWindowTitle('Musical-PiCasso')
-        self.setStyleSheet("background-color: rgb(49, 54, 59);")
-        self.showFullScreen()
-        layout = QtWidgets.QGridLayout()
-        self.label = QtWidgets.QLabel()
-        font = QtGui.QFont()
-        font.setPointSize(28)
-        font.setBold(True)
-        font.setWeight(75)
-        self.label.setFont(font)
-        self.label.setText("Welcome\n\n To \n\nPiCasso Art Creator")
-        self.label.setStyleSheet("color: rgb(255, 255, 255);")
-        self.label.setAlignment(QtCore.Qt.AlignCenter)
-        self.label.setObjectName("label")
-        vbox = QtWidgets.QVBoxLayout()
-        vbox.addStretch()
-        vbox.addWidget(self.label)
-        vbox.addStretch()
-        self.setLayout(vbox)
-        QtCore.QTimer.singleShot(3000, controller.show_menu)
 
 
-"""
-.......................................................................................................
+#Range function with float 
+def range_step(start, step, stop):
+	range = start
+	while range < stop:
+		yield range
+		range += step
 
-Welcome screen ends
+#Wait Key function with escape handling		
+def wait_key(time_seconds):
+	#state False if no Esc key is pressed
+	state = False
+	#Check if any key is pressed. second multiplier for millisecond: 1000
+	k = cv2.waitKey(int(time_seconds * 1000))
+	#Check if ESC key is pressed. ASCII Keycode of ESC=27
+	if k == esc_keycode:  
+		#Destroy Window
+		cv2.destroyWindow(window_name)
+		#state True if Esc key is pressed
+		state = True
+	if k == enter:
+		cv2.destroyWindow(window_name)
+		state = True
+		controller.Welcome()
+#return state	
+	return state	
+	
+#Load image path of all images		
+def load_img_path(pathFolder):
+	#empty list
+	_path_image_list = []
+	#Loop for every file in folder path
+	for filename in os.listdir(pathFolder):
+		#Image Read Path
+		_path_image_read = os.path.join(pathFolder, filename)
+		#Check if file path has supported image format and then only append to list
+		if _path_image_read.lower().endswith(supported_formats):
+			_path_image_list.append(_path_image_read)
+        
+	_path_image_list = sorted(list(_path_image_list))
+#Return image path list
+	return _path_image_list
+#Load image and return with resize	
+def load_img(pathImageRead, resizeWidth, resizeHeight): 	
+	#Load an image
+	#cv2.IMREAD_COLOR = Default flag for imread. Loads color image.
+	#cv2.IMREAD_GRAYSCALE = Loads image as grayscale.
+	#cv2.IMREAD_UNCHANGED = Loads image which have alpha channels.
+	#cv2.IMREAD_ANYCOLOR = Loads image in any possible format
+	#cv2.IMREAD_ANYDEPTH = Loads image in 16-bit/32-bit otherwise converts it to 8-bit
+	_img_input = cv2.imread(pathImageRead,cv2.IMREAD_ANYCOLOR)
 
-.......................................................................................................
-"""
+	#Check if image is not empty
+	if _img_input is not None:
+		#Get read images height and width
+		_img_height, _img_width = _img_input.shape[:2]
+	
+		#if image size is more than resize perform cv2.INTER_AREA interpolation otherwise cv2.INTER_LINEAR for zooming
+		if _img_width > resizeWidth or _img_height > resizeHeight:
+			interpolation = cv2.INTER_AREA
+		else:
+			interpolation = cv2.INTER_LINEAR
+		
+		# perform the actual resizing of the image and show it
+		_img_resized = cv2.resize(_img_input, (resizeWidth, resizeHeight), interpolation)
+	else:
+		#if image is empty
+		_img_resized = _img_input
+	#return the resized image	
+	return _img_resized	
 
 
 
@@ -316,6 +273,55 @@ def slideshow():
 Slideshow ends
 
 '''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+"""
+
+
+
+
+"""
+.......................................................................................................
+
+Welcome screen starts
+
+.......................................................................................................
+"""
+
+class Welcome(QtWidgets.QWidget):
+
+    switch_window = QtCore.pyqtSignal(str)
+
+    def __init__(self):
+        QtWidgets.QWidget.__init__(self)
+        self.setWindowTitle('Musical-PiCasso')
+        self.setStyleSheet("background-color: rgb(49, 54, 59);")
+        self.showFullScreen()
+        layout = QtWidgets.QGridLayout()
+#        QtCore.QTimer.setSingleShot(False)
+        self.label = QtWidgets.QLabel()
+        font = QtGui.QFont()
+        font.setPointSize(28)
+        font.setBold(True)
+        font.setWeight(75)
+        self.label.setFont(font)
+        self.label.setText("Welcome\n\n To \n\nPiCasso Art Creator")
+        self.label.setStyleSheet("color: rgb(255, 255, 255);")
+        self.label.setAlignment(QtCore.Qt.AlignCenter)
+        self.label.setObjectName("label")
+        vbox = QtWidgets.QVBoxLayout()
+        vbox.addStretch()
+        vbox.addWidget(self.label)
+        vbox.addStretch()
+        self.setLayout(vbox)
+#        QtCore.QTimer.setSingleShot(True)
+        QtCore.QTimer.singleShot(3000, controller.show_menu)
+#        QtCore.QTimer.singleShot(self,False)
+
+"""
+.......................................................................................................
+
+Welcome screen ends
+
+.......................................................................................................
 """
 
 
@@ -486,33 +492,74 @@ class Ui_Main_menu(QtWidgets.QMainWindow):
         self.centralwidget.setGeometry(0, 0, width, height)
         self.gridLayout = QtWidgets.QGridLayout(self.centralwidget)
         self.gridLayout.setObjectName("gridLayout")
+        spacerItem8 = QtWidgets.QSpacerItem(80, 80, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
+        self.gridLayout.addItem(spacerItem8, 1, 6, 1, 1)
+
         spacerItem = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
-        self.gridLayout.addItem(spacerItem, 0, 4, 1, 1)
+        self.gridLayout.addItem(spacerItem, 2, 4, 1, 1)
         spacerItem1 = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
-        self.gridLayout.addItem(spacerItem1, 0, 0, 1, 1)
+        self.gridLayout.addItem(spacerItem1, 2, 0, 1, 1)
         self.pushButton_2 = QtWidgets.QPushButton(self.centralwidget)
         self.pushButton_2.setObjectName("pushButton_2")
         self.pushButton_2.setIcon(QtGui.QIcon('/home/sv-v1/projects/picasso/images/gif_icon.jpeg'))
         self.pushButton_2.setIconSize(QtCore.QSize(200, 200))
         self.pushButton_2.setFlat(True)
-        self.gridLayout.addWidget(self.pushButton_2, 0, 5, 1, 1)
+        self.gridLayout.addWidget(self.pushButton_2, 2, 5, 1, 1)
         spacerItem2 = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
-        self.gridLayout.addItem(spacerItem2, 0, 2, 1, 1)
+        self.gridLayout.addItem(spacerItem2, 2, 2, 1, 1)
         self.pushButton = QtWidgets.QPushButton(self.centralwidget)
         self.pushButton.setObjectName("pushButton")
         self.pushButton.setIcon(QtGui.QIcon('/home/sv-v1/projects/picasso/images/multiple_icon.jpeg'))
         self.pushButton.setIconSize(QtCore.QSize(200, 200))
         self.pushButton.setFlat(True)
-        self.gridLayout.addWidget(self.pushButton, 0, 3, 1, 1)
+        self.gridLayout.addWidget(self.pushButton, 2, 3, 1, 1)
         self.pushButton_3 = QtWidgets.QPushButton(self.centralwidget)
         self.pushButton_3.setObjectName("pushButton_3")
         self.pushButton_3.setIcon(QtGui.QIcon('/home/sv-v1/projects/picasso/images/picasso_icon.jpg'))
         self.pushButton_3.setIconSize(QtCore.QSize(200, 200))
         self.pushButton_3.setFlat(True)
-        self.gridLayout.addWidget(self.pushButton_3, 0, 1, 1, 1)
+        self.gridLayout.addWidget(self.pushButton_3, 2, 1, 1, 1)
         spacerItem3 = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
-        self.gridLayout.addItem(spacerItem3, 0, 6, 1, 1)
+        self.gridLayout.addItem(spacerItem3, 2, 6, 1, 1)
+
         self.setCentralWidget(self.centralwidget)
+        self.label = QtWidgets.QLabel(self.centralwidget)
+        font = QtGui.QFont()
+        font.setPointSize(18)
+        font.setBold(True)
+        font.setWeight(75)
+        self.label.setFont(font)
+        self.label.setText("Picasso\n Image Creator")
+        self.label.setStyleSheet("color: rgb(255, 255, 255);")
+        self.label.setAlignment(QtCore.Qt.AlignCenter)
+        self.label.setObjectName("label")
+        self.gridLayout.addWidget(self.label, 3, 1, 1, 1)
+
+        self.label_2 = QtWidgets.QLabel(self.centralwidget)
+        font = QtGui.QFont()
+        font.setPointSize(18)
+        font.setBold(True)
+        font.setWeight(75)
+        self.label_2.setFont(font)
+        self.label_2.setText("Multiple Shot\nCreator")
+        self.label_2.setStyleSheet("color: rgb(255, 255, 255);")
+        self.label_2.setAlignment(QtCore.Qt.AlignCenter)
+        self.label_2.setObjectName("label_2")
+        self.gridLayout.addWidget(self.label_2, 3, 3, 1, 1)
+
+        self.label_3 = QtWidgets.QLabel(self.centralwidget)
+        font = QtGui.QFont()
+        font.setPointSize(18)
+        font.setBold(True)
+        font.setWeight(75)
+        self.label_3.setFont(font)
+        self.label_3.setText("Stop Motion\nCreator")
+        self.label_3.setStyleSheet("color: rgb(255, 255, 255);")
+        self.label_3.setAlignment(QtCore.Qt.AlignCenter)
+        self.label_3.setObjectName("label_3")
+        self.gridLayout.addWidget(self.label_3, 3, 5, 1, 1)
+        spacerItem7 = QtWidgets.QSpacerItem(20, 40, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
+        self.gridLayout.addItem(spacerItem7, 4, 2, 1, 1)
 
         self.pushButton.clicked.connect(self.on_pushButton_clicked)
 
