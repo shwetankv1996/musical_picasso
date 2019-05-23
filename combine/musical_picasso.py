@@ -5,12 +5,15 @@ from PyQt5 import QtCore, QtWidgets, uic, QtGui
 import time
 import imutils
 from imutils import paths
-
+from pygame import mixer
+import random
 
 app = QtWidgets.QApplication(sys.argv)
 screen_resolution = app.desktop().screenGeometry()
 width, height = screen_resolution.width(), screen_resolution.height()
 
+#Music files path
+music_path = "/home/sv-v1/projects/picasso/music/"
 #splash image path
 splash_image = "/home/sv-v1/projects/picasso/images/Musical Picasso.png"
 #splash UI path
@@ -29,6 +32,8 @@ slideshow_img_time = 3
 window_name="Musical Picasso"
 #Supoorted formats tuple
 supported_formats = ('.png', '.jpg', '.jpeg', '.bmp', '.dib', '.jpe', '.jp2', '.pgm', '.tiff', '.tif', '.ppm')
+#supproted music formats
+supported_formats_msc = ('.wav', '.mp3')
 #Escape ASCII Keycode
 esc_keycode=27
 #Enter ASCII Keycode
@@ -148,11 +153,11 @@ def wait_key(time_seconds):
 	#Check if ESC key is pressed. ASCII Keycode of ESC=27
 	if k == esc_keycode:  
 		#Destroy Window
-		cv2.destroyWindow(window_name)
+		cv2.destroyAllWindows()
 		#state True if Esc key is pressed
 		state = True
 	if k == enter:
-		cv2.destroyWindow(window_name)
+		cv2.destroyAllWindows()
 		state = True
 		controller.Welcome()
 #return state	
@@ -204,6 +209,23 @@ def load_img(pathImageRead, resizeWidth, resizeHeight):
 
 
 
+
+def load_msc_path(mscfolder):
+	#empty list
+	_path_msc_list = []
+	#Loop for every file in folder path
+	for filename in os.listdir(mscfolder):
+		#music Read Path
+		_path_msc_read = os.path.join(mscfolder, filename)
+		print(_path_msc_read)
+		#Check if file path has supported image format and then only append to list
+		if _path_msc_read.lower().endswith(supported_formats_msc):
+			_path_msc_list.append(_path_msc_read)
+	print(_path_msc_list)
+	random.shuffle(list(_path_msc_list))
+#Return image path list
+	return _path_msc_list
+
 """
 '''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
 
@@ -215,6 +237,8 @@ Slideshow starts
 def slideshow():
 	#Load image paths	
 	img_path_list = load_img_path(path_folder)
+	#load music path list
+	music_path_list = load_msc_path(music_path)
 	#slideshow transition image wait time
 	slideshow_transit_wait_time = float (slideshow_trasnition_time) / transit_slides
 	#Create a Window
@@ -224,9 +248,14 @@ def slideshow():
 	cv2.setWindowProperty(window_name,cv2.WND_PROP_FULLSCREEN,cv2.WINDOW_FULLSCREEN)
 	#Create first image	
 	img_one = None	
+	i = 0
+	print(music_path_list)
 	#Laod every image file path
 #	while True:
+#	for msc_path in music_path_list:
 	for imge_path in img_path_list:
+		mixer.music.load(music_path_list[i])
+		mixer.music.play()
 		#if image is none load image
 		if img_one is None:
 			#Load first image
@@ -238,7 +267,7 @@ def slideshow():
 				break
 			#continiue to for loop
 			continue
-
+		i+=1
 		#Load Second image	
 		img_two = load_img(imge_path, slideshow_width, slideshow_height)
 
@@ -354,8 +383,11 @@ class Picasso(QtWidgets.QMainWindow):
             cv2.imshow("Capture", frame)
             k = cv2.waitKey(1)
             if k == ord("s"):
+                mixer.music.load(music_path+"shutter_sound.wav")
+                mixer.music.play()
                 cv2.imwrite("/home/sv-v1/projects/picasso/extracted_images/style_capture.jpg", frame)
                 cv2.destroyAllWindows()
+                cap.release()
                 break
 
 # loop over the model paths
@@ -395,6 +427,7 @@ class Picasso(QtWidgets.QMainWindow):
 #                cv2.imwrite("/home/sv-v1/projects/picasso/images/2.jpeg", im)
                 cv2.destroyAllWindows()
                 del modelPaths[:]
+                self.close()
                 slideshow()
                 break
 
@@ -641,7 +674,7 @@ Controller ends
 
 '''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
 """
-
+mixer.init()
 
 Splash = QtWidgets.QMainWindow()
 controller = Controller()
